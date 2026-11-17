@@ -4,7 +4,7 @@
 
 A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 
-<img src="attachments/IMG_1083.jpg" width="400" alt="Finished amplifier">
+<img src="attachments/IMG_1083.jpg" width="600" alt="Finished amplifier">
 
 
 ## Specifications
