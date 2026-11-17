@@ -11,7 +11,7 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 * **Amplifier class:** AB
 * **Quiescent bias:** 100mA
 * **Input drive power:** ~50mW (+17 dBm)
-* **Max power out:** 5W (+37dBm) @ 146MHz
+* **Max power out:** ~5W (+37dBm) @ 146MHz
 * **Power gain:** ~20dB @ 146MHz
 * **Drain efficiency:** unmeasured
 * **PCB:** 2-Layer custom PCB with embedded copper coin manufactured at home
@@ -19,14 +19,14 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 
 ## Architecture
 
-* **Input matching:**
-* **Power stage:**
-* **Output matching:**
+* **Input matching:** At 145MHz, the AFT05MS004NT1 requests a Zsource of 9.05+j12.43Ω to match its input impedance to 50Ω. This was done with a 39pF generator side shunt capacitor and a 38nH series inductor.
+* **Power stage:** The amplifier uses a single stage, common source Class AB topology built around the AFT05MS004NT1 LDMOS, biased at a quiescent drain current of 100mA from a 7.5V supply. An adjustable dc bias with thermal compensation is applied to the gate through a 1kΩ resistor. Drain power is fed through an RF choke of 220nH, bypassed with multi-value decoupling capacitors to present a low impedance RF ground across VHF and lower frequencies.
+* **Output matching:** To match its output to 50Ω, the AFT05MS004NT1 requires a load impedance of 2.54-j0.54Ω. This results in a very large impedance transformation, and the resulting matching stage is very sensitive to component tolerances. I arrived at a pi network design: 15pF generator shunt capacitor, 12nH series inductor, 100pF load side shunt capacitor. The low generator side shunt capacitance stops high currents from travelling through the shunt and loading down the drain. An inductance calculator and nanoVNA was used to create an accurate 12nH inductor.
 
 ## Challenges
 
-* **Amplifier stability:**
-* **Impedance matching:**
-* **Thermal interface:** Because the AFT05MS004NT1 comes in SOT-89, a very small SMD package, it requires the board to have a thermally conductive channel to dissipate heat. With a home made board, in-pad thermal vias are very difficult. Instead I modeled a rectangle underneath the source of the AFT05MS004NT1 to be cut out and replaced with a custom milled copper rectangle. The top and bottom of the copper is soldered to the ground plane, and the bottom solder is milled flat with the board to achieve an excellent thermal interface from the heatsink to the LDMOS.
-* **Thermal compensation:**
-* **Switching converter on an RF board:**
+* **Amplifier stability:** Wideband RF LDMOS devices such as the AFT05MS004NT1 exhibit high gain well below their rated VHF/UHF operating range, making the transistor prone to self-oscillation. Good layout practice along with a 3.3Ω attenuator pad at the gate was used to prevent this oscillation.
+* **Impedance matching:** Designing matching networks for a 2-layer homemade RF board was challenging because the AFT05MS004NT1 requires very low terminal impedances, notably the 2.5Ω load impedance at the drain represents roughly a 20:1 impedance transformation ratio to 50Ω. At VHF, even 1-2nH of unmodeled lead or trace inductance shifts the match noticeably. For fine tuning, values were refined by VNA measurements on a board with identical trace parasitics.
+* **Thermal interface:** Because the AFT05MS004NT1 comes in SOT-89, a very small SMD package, it requires the board to have a thermally conductive channel to dissipate heat. With a home made board, in-pad thermal vias are very difficult. Instead I modeled a rectangle underneath the source of the AFT05MS004NT1 to be cut out and replaced with a custom milled copper rectangle. The top and bottom of the copper was soldered to the ground plane, and the bottom solder is milled flat with the board to achieve an excellent thermal interface from the heatsink to the LDMOS.
+* **Thermal compensation:** As the device claims to dissipate 2.5W maximum, I decided temperature compensation was necessary for the quiescent bias of the amplifier. As the temperature of the LDMOS goes up, its gate threshold voltage goes down. In the event that the transistor were to heat up, it would draw even more power and heat up more, thermal runaway. The AFT05MS004NT1's gate threshold voltage drops at approximately 2.2mV/°C. To achieve thermal compensation I summed my adjustable DC bias with the voltage drop of a BAS16W diode located on the same thermal interface as the LDMOS. The BAS16W diode drop decreases at about 1.9mV/°C, so the summing amplifier has 1.245x gain to bring that just above the negative temperature coefficient of the LDMOS.
+* **Switching converter on an RF board:** Any RF amplifier needs a very solid, noise free power supply. Achieving this with a switching converter requires very careful layout and part selection to avoid interference with the RF components. Switching loops were made as small as possible and decoupling capacitors placed very tightly with good ground plane continuity. A shielded inductor was used to minimize radiated emissions from the converter. To minimize any remaining ripple on the supply, the +7.5V goes through a pi low pass filter, achieving ~40dB reduction in the fundamental switching frequency.
