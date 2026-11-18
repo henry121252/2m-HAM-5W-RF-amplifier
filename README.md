@@ -22,7 +22,7 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 
 ## Architecture
 
-<img src="attachments/Screenshot 2026-11-17 200642.png" width="600" alt="Amplifier schematic diagram">
+<img src="attachments/Screenshot 2026-11-17 220947.png" width="600" alt="Amplifier schematic diagram">
 
 * **Input matching:** At 145MHz, the AFT05MS004NT1 requests a Zsource of 9.05+j12.43Ω to match its input impedance to 50Ω. This was done with a 39pF generator side shunt capacitor and a 38nH series inductor.
 * **Power stage:** The amplifier uses a single stage, common source Class AB topology built around the AFT05MS004NT1 LDMOS, biased at a quiescent drain current of 100mA from a 7.5V supply. An adjustable dc bias with thermal compensation is applied to the gate through a 1kΩ resistor. Drain power is fed through an RF choke of 220nH, bypassed with multi-value decoupling capacitors to present a low impedance RF ground across VHF and lower frequencies.
