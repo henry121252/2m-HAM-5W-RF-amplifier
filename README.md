@@ -26,6 +26,8 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 * **Power stage:** The amplifier uses a single stage, common source Class AB topology built around the AFT05MS004NT1 LDMOS, biased at a quiescent drain current of 100mA from a 7.5V supply. An adjustable dc bias with thermal compensation is applied to the gate through a 1kΩ resistor. Drain power is fed through an RF choke of 220nH, bypassed with multi-value decoupling capacitors to present a low impedance RF ground across VHF and lower frequencies.
 * **Output matching:** To match its output to 50Ω, the AFT05MS004NT1 requires a load impedance of 2.54-j0.54Ω. This results in a very large impedance transformation, and the resulting matching stage is very sensitive to component tolerances. I arrived at a pi network design: 15pF generator shunt capacitor, 12nH series inductor, 100pF load side shunt capacitor. The low generator side shunt capacitance stops high currents from travelling through the shunt and loading down the drain. An inductance calculator and nanoVNA was used to create an accurate 12nH inductor.
 
+<img src="attachments/IMG_1073.jpg" width="600" alt="VNA measurements confirm 12nH series inductance">
+
 ## Challenges
 
 * **Amplifier stability:** Wideband RF LDMOS devices such as the AFT05MS004NT1 exhibit high gain well below their rated VHF/UHF operating range, making the transistor prone to self-oscillation. Good layout practice along with a 3.3Ω attenuator pad at the gate was used to prevent this oscillation.
