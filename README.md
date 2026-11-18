@@ -25,7 +25,9 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 <img src="attachments/Screenshot 2026-11-17 220947.png" width="600" alt="Amplifier schematic diagram">
 
 * **Input matching:** At 145MHz, the AFT05MS004NT1 requests a Zsource of 9.05+j12.43Ω to match its input impedance to 50Ω. This was done with a 39pF generator side shunt capacitor and a 38nH series inductor in an L-network.
+  
 * **Power stage:** The amplifier uses a single stage, common source Class AB topology built around the AFT05MS004NT1 LDMOS, biased at a quiescent drain current of 100mA from a 7.5V supply. An adjustable dc bias with thermal compensation is applied to the gate through a 1kΩ resistor. Drain power is fed through an RF choke of 220nH, bypassed with multi-value decoupling capacitors to present a low impedance RF ground across VHF and lower frequencies.
+  
 * **Output matching:** To match its output to 50Ω, the AFT05MS004NT1 requires a load impedance of 2.54-j0.54Ω. This results in a very large impedance transformation, and the resulting matching stage is very sensitive to component tolerances. I arrived at a pi-network design: 15pF generator shunt capacitor, 12nH series inductor, 100pF load side shunt capacitor. This matching networks also acts as a low pass filter, helping to reconstruct the original waveform of the input.
 
 <img src="attachments/IMG_1073.jpg" width="600" alt="VNA measurements on 12nH inductor">
@@ -33,7 +35,9 @@ A 5W PA for transmitting on the 2m band, centered around the AFT05MS004NT1.
 ## Challenges
 
 * **Amplifier stability:** Wideband RF LDMOS devices such as the AFT05MS004NT1 exhibit high gain well below their rated VHF/UHF operating range, making the transistor prone to self-oscillation. Good layout practice along with a 3.3Ω attenuator pad at the gate was used to prevent this oscillation.
+  
 * **Impedance matching:** Designing matching networks for a 2-layer homemade RF board was challenging because the AFT05MS004NT1 requires very low terminal impedances, notably the 2.5Ω load impedance at the drain represents roughly a 20:1 impedance transformation ratio to 50Ω. At VHF, even 1-2nH of unmodeled lead or trace inductance shifts the match noticeably. For fine tuning, values were refined by VNA measurements on a board with identical trace parasitics. A previous matching network had a much larger 330pF generator side shunt capacitor and, while numerically matched, the resulting RF output was only ~1.5W. The low 15pF generator side shunt capacitance stops high currents from travelling through the shunt and loading down the drain, resulting in the expected 5W output.
+  
 * **Thermal interface:** Because the AFT05MS004NT1 dissipates up to 2.5W and comes in SOT-89, a very small SMD package, it requires the board to have a thermally conductive channel to dissipate heat. With a home made PCB, in-pad thermal vias are very difficult. Instead I modeled a rectangle underneath the source of the AFT05MS004NT1 to be cut out and replaced with a custom milled copper rectangle. The top and bottom of the copper was soldered to the ground plane, and the bottom solder is milled flat with the board to achieve an excellent thermal interface from the heatsink to the LDMOS. This process also results in quite a bit of solder on the front of the board.
 
 <img src="attachments/Screenshot 2026-11-17 221152.png" width="800" alt="PCB layout in KiCad">
